@@ -23,6 +23,7 @@ export function databaseConfig(): TypeOrmModuleAsyncOptions {
                 InstitutionTranslationEntity,
             ],
             synchronize: true,
+            ssl: configService.getOrThrow('NODE_ENV') === 'production',
         }),
     };
 }
