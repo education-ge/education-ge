@@ -9,7 +9,7 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { InstitutionsService } from './institutions.service';
-import { CreateKindergartenDto } from './dto/request';
+import { CreateKindergartenDto, CreateSchoolDto } from './dto/request';
 
 @Controller('institutions')
 export class InstitutionsController {
@@ -41,4 +41,20 @@ export class InstitutionsController {
     //
     // @Delete('kindergartens/:id')
     // deleteKindergarten(@Param('id') kindergartenId: number) {}
+
+    @UsePipes(ValidationPipe)
+    @Post('schools')
+    createSchool(@Body() createSchoolDto: CreateSchoolDto) {
+        return this.institutionsService.createSchool(createSchoolDto);
+    }
+
+    @Get('schools')
+    getSchools() {
+        return this.institutionsService.getSchools();
+    }
+
+    @Get('schools/:id')
+    getSchool(@Param('id', ParseIntPipe) schoolId: number) {
+        return this.institutionsService.getSchool(schoolId);
+    }
 }

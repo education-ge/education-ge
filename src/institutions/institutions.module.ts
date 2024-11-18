@@ -6,6 +6,7 @@ import {
     InstitutionContactsEntity,
     InstitutionTranslationEntity,
     KindergartenEntity,
+    SchoolEntity,
 } from './entities';
 
 @Module({
@@ -14,6 +15,7 @@ import {
     imports: [
         TypeOrmModule.forFeature([
             KindergartenEntity,
+            SchoolEntity,
             InstitutionContactsEntity,
             InstitutionTranslationEntity,
         ]),

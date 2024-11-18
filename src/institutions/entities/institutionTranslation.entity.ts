@@ -1,4 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { LocaleEnum } from '../enums/locale.enum';
+import { KindergartenEntity } from './kindergarten.entity';
+import { SchoolEntity } from './school.entity';
 
 @Entity({ name: 'institutions_translations' })
 export class InstitutionTranslationEntity {
@@ -6,30 +9,23 @@ export class InstitutionTranslationEntity {
     id: string;
 
     @Column()
-    name_en: string;
-    @Column()
-    name_ge: string;
-    @Column()
-    name_ru: string;
+    name: string;
 
     @Column()
-    address_en: string;
-    @Column()
-    address_ge: string;
-    @Column()
-    address_ru: string;
+    address: string;
 
     @Column({ nullable: true })
-    shortDescription_en?: string;
-    @Column({ nullable: true })
-    shortDescription_ge?: string;
-    @Column({ nullable: true })
-    shortDescription_ru?: string;
+    shortDescription?: string;
 
     @Column({ nullable: true })
-    description_en?: string;
-    @Column({ nullable: true })
-    description_ge?: string;
-    @Column({ nullable: true })
-    description_ru?: string;
+    description?: string;
+
+    @Column({ type: 'enum', enum: LocaleEnum })
+    locale: LocaleEnum;
+
+    @ManyToOne(() => KindergartenEntity)
+    kindergarten: KindergartenEntity;
+
+    @ManyToOne(() => SchoolEntity)
+    school: SchoolEntity;
 }

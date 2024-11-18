@@ -2,6 +2,7 @@ import {
     Column,
     Entity,
     JoinColumn,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -17,9 +18,12 @@ export class KindergartenEntity {
     @JoinColumn()
     contacts: InstitutionContactsEntity;
 
-    @OneToOne(() => InstitutionTranslationEntity)
+    @OneToMany(
+        () => InstitutionTranslationEntity,
+        (translation) => translation.kindergarten,
+    )
     @JoinColumn()
-    translation: InstitutionTranslationEntity;
+    translations: InstitutionTranslationEntity[];
 
     @Column({ type: 'int', array: true })
     ageGroups: number[];

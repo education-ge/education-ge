@@ -5,14 +5,17 @@ import {
     InstitutionContactsEntity,
     InstitutionTranslationEntity,
     KindergartenEntity,
+    SchoolEntity,
 } from './entities';
-import { CreateKindergartenDto } from './dto/request';
+import { CreateKindergartenDto, CreateSchoolDto } from './dto/request';
 
 @Injectable()
 export class InstitutionsService {
     constructor(
         @InjectRepository(KindergartenEntity)
         private readonly kindergartensRepository: Repository<KindergartenEntity>,
+        @InjectRepository(SchoolEntity)
+        private readonly schoolsRepository: Repository<SchoolEntity>,
         @InjectRepository(InstitutionContactsEntity)
         private readonly institutionsContactsRepository: Repository<InstitutionContactsEntity>,
         @InjectRepository(InstitutionTranslationEntity)
@@ -24,8 +27,8 @@ export class InstitutionsService {
             contacts: await this.institutionsContactsRepository.save(
                 createKindergartenDto.contacts,
             ),
-            translation: await this.institutionsTranslationsRepository.save(
-                createKindergartenDto.translation,
+            translations: await this.institutionsTranslationsRepository.save(
+                createKindergartenDto.translations,
             ),
         });
 
@@ -46,5 +49,36 @@ export class InstitutionsService {
             throw new NotFoundException('Kindergarten not found');
 
         return kindergarten;
+    }
+
+    async createSchool(createSchoolDto: CreateSchoolDto) {
+        const school = this.schoolsRepository.create({
+            ...createSchoolDto,
+            translations: await this.institutionsTranslationsRepository.save(
+                createSchoolDto.translations,
+            ),
+            contacts: await this.institutionsContactsRepository.save(
+                createSchoolDto.contacts,
+            ),
+        });
+
+        return await this.schoolsRepository.save(school);
+    }
+
+    getSchools() {
+        return this.schoolsRepository.find({
+            relations: ['contacts', 'translations'],
+        });
+    }
+
+    async getSchool(schoolId: number) {
+        const school = await this.schoolsRepository.findOne({
+            where: { id: schoolId },
+            relations: ['contacts', 'translations'],
+        });
+
+        if (!school) throw new NotFoundException('School not found');
+
+        return school;
     }
 }

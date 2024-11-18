@@ -4,6 +4,7 @@ import {
     InstitutionContactsEntity,
     InstitutionTranslationEntity,
     KindergartenEntity,
+    SchoolEntity,
 } from '../institutions/entities';
 
 export function databaseConfig(): TypeOrmModuleAsyncOptions {
@@ -19,6 +20,7 @@ export function databaseConfig(): TypeOrmModuleAsyncOptions {
             database: configService.getOrThrow('DB_NAME'),
             entities: [
                 KindergartenEntity,
+                SchoolEntity,
                 InstitutionContactsEntity,
                 InstitutionTranslationEntity,
             ],

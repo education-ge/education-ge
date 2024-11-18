@@ -1,50 +1,27 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { LocaleEnum } from '../../enums/locale.enum';
 
 export class CreateInstitutionTranslationDto {
     @ApiProperty()
     @IsString()
-    name_en: string;
-    @ApiProperty()
-    @IsString()
-    name_ge: string;
-    @ApiProperty()
-    @IsString()
-    name_ru: string;
+    name: string;
 
     @ApiProperty()
     @IsString()
-    address_en: string;
-    @ApiProperty()
-    @IsString()
-    address_ge: string;
-    @ApiProperty()
-    @IsString()
-    address_ru: string;
+    address: string;
 
     @ApiProperty({ required: false })
     @IsString()
     @IsOptional()
-    shortDescription_en?: string;
-    @ApiProperty({ required: false })
-    @IsString()
-    @IsOptional()
-    shortDescription_ge?: string;
-    @ApiProperty({ required: false })
-    @IsString()
-    @IsOptional()
-    shortDescription_ru?: string;
+    shortDescription?: string;
 
     @ApiProperty({ required: false })
     @IsString()
     @IsOptional()
-    description_en?: string;
-    @ApiProperty({ required: false })
-    @IsString()
-    @IsOptional()
-    description_ge?: string;
-    @ApiProperty({ required: false })
-    @IsString()
-    @IsOptional()
-    description_ru?: string;
+    description?: string;
+
+    @ApiProperty({ enum: LocaleEnum })
+    @IsEnum(LocaleEnum)
+    locale: LocaleEnum;
 }

@@ -1,4 +1,5 @@
 import {
+    IsArray,
     IsBoolean,
     IsDefined,
     IsInt,
@@ -22,9 +23,10 @@ export class CreateKindergartenDto {
 
     @ApiProperty({ type: CreateInstitutionTranslationDto })
     @IsDefined()
-    @ValidateNested()
+    @IsArray()
+    @ValidateNested({ each: true })
     @Type(() => CreateInstitutionTranslationDto)
-    translation: CreateInstitutionTranslationDto;
+    translations: CreateInstitutionTranslationDto[];
 
     @ApiProperty({ type: 'integer', isArray: true })
     @IsNumber({}, { each: true })
