@@ -11,7 +11,7 @@ export class CreateSchoolDto {
     @Type(() => CreateInstitutionContactsDto)
     contacts: CreateInstitutionContactsDto;
 
-    @ApiProperty({ type: CreateInstitutionTranslationDto })
+    @ApiProperty({ type: CreateInstitutionTranslationDto, isArray: true })
     @IsDefined()
     @IsArray()
     @ValidateNested({ each: true })
