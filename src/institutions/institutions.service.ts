@@ -36,13 +36,15 @@ export class InstitutionsService {
     }
 
     getKindergartens() {
-        return this.kindergartensRepository.find({ relations: ['contacts'] });
+        return this.kindergartensRepository.find({
+            relations: ['contacts', 'translations'],
+        });
     }
 
     async getKindergartenById(id: number) {
         const kindergarten = await this.kindergartensRepository.findOne({
             where: { id },
-            relations: ['contacts'],
+            relations: ['contacts', 'translations'],
         });
 
         if (!kindergarten)
