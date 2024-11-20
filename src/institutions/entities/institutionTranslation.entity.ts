@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { LocaleEnum } from '../enums/locale.enum';
+import { LocaleEnum } from '../../enums/locale.enum';
 import { KindergartenEntity } from './kindergarten.entity';
 import { SchoolEntity } from './school.entity';
 
