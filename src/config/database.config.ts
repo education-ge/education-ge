@@ -1,10 +1,13 @@
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import {
-    InstitutionContactsEntity,
-    InstitutionTranslationEntity,
+    ContactsEntity,
+    TranslationEntity,
     KindergartenEntity,
     SchoolEntity,
+    CityEntity,
+    AreaEntity,
+    SubareaEntity,
 } from '../institutions/entities';
 
 export function databaseConfig(): TypeOrmModuleAsyncOptions {
@@ -21,8 +24,11 @@ export function databaseConfig(): TypeOrmModuleAsyncOptions {
             entities: [
                 KindergartenEntity,
                 SchoolEntity,
-                InstitutionContactsEntity,
-                InstitutionTranslationEntity,
+                ContactsEntity,
+                TranslationEntity,
+                CityEntity,
+                AreaEntity,
+                SubareaEntity,
             ],
             synchronize: true,
             ssl: configService.getOrThrow('NODE_ENV') === 'production',

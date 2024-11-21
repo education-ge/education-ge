@@ -3,6 +3,7 @@ import {
     Controller,
     Get,
     Param,
+    ParseEnumPipe,
     ParseIntPipe,
     Post,
     UsePipes,
@@ -10,6 +11,9 @@ import {
 } from '@nestjs/common';
 import { InstitutionsService } from './institutions.service';
 import { CreateKindergartenDto, CreateSchoolDto } from './dto/request';
+import { LocaleEnum } from '../enums';
+import { ApiOkResponse, ApiParam } from '@nestjs/swagger';
+import { KindergartenDto, SchoolDto } from './dto/response';
 
 @Controller('institutions')
 export class InstitutionsController {
@@ -26,14 +30,26 @@ export class InstitutionsController {
         );
     }
 
+    @ApiParam({ name: 'locale', enum: LocaleEnum })
+    @ApiOkResponse({ type: KindergartenDto, isArray: true })
     @Get('kindergartens')
-    getKindergartens() {
-        return this.institutionsService.getKindergartens();
+    getKindergartens(
+        @Param('locale', new ParseEnumPipe(LocaleEnum)) locale: LocaleEnum,
+    ) {
+        return this.institutionsService.getKindergartens(locale);
     }
 
+    @ApiParam({ name: 'locale', enum: LocaleEnum })
+    @ApiOkResponse({ type: KindergartenDto })
     @Get('kindergartens/:id')
-    getKindergarten(@Param('id', ParseIntPipe) kindergartenId: number) {
-        return this.institutionsService.getKindergartenById(kindergartenId);
+    getKindergarten(
+        @Param('locale', new ParseEnumPipe(LocaleEnum)) locale: LocaleEnum,
+        @Param('id', ParseIntPipe) kindergartenId: number,
+    ) {
+        return this.institutionsService.getKindergartenById(
+            kindergartenId,
+            locale,
+        );
     }
 
     // @Patch('kindergartens/:id')
@@ -48,13 +64,22 @@ export class InstitutionsController {
         return this.institutionsService.createSchool(createSchoolDto);
     }
 
+    @ApiParam({ name: 'locale', enum: LocaleEnum })
+    @ApiOkResponse({ type: SchoolDto, isArray: true })
     @Get('schools')
-    getSchools() {
-        return this.institutionsService.getSchools();
+    getSchools(
+        @Param('locale', new ParseEnumPipe(LocaleEnum)) locale: LocaleEnum,
+    ) {
+        return this.institutionsService.getSchools(locale);
     }
 
+    @ApiParam({ name: 'locale', enum: LocaleEnum })
+    @ApiOkResponse({ type: SchoolDto })
     @Get('schools/:id')
-    getSchool(@Param('id', ParseIntPipe) schoolId: number) {
-        return this.institutionsService.getSchool(schoolId);
+    getSchool(
+        @Param('locale', new ParseEnumPipe(LocaleEnum)) locale: LocaleEnum,
+        @Param('id', ParseIntPipe) schoolId: number,
+    ) {
+        return this.institutionsService.getSchool(schoolId, locale);
     }
 }

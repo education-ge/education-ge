@@ -3,8 +3,8 @@ import { InstitutionsService } from './institutions.service';
 import { InstitutionsController } from './institutions.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
-    InstitutionContactsEntity,
-    InstitutionTranslationEntity,
+    ContactsEntity,
+    TranslationEntity,
     KindergartenEntity,
     SchoolEntity,
 } from './entities';
@@ -16,8 +16,8 @@ import {
         TypeOrmModule.forFeature([
             KindergartenEntity,
             SchoolEntity,
-            InstitutionContactsEntity,
-            InstitutionTranslationEntity,
+            ContactsEntity,
+            TranslationEntity,
         ]),
     ],
 })

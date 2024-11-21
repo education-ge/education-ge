@@ -2,12 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
-    InstitutionContactsEntity,
-    InstitutionTranslationEntity,
+    ContactsEntity,
+    TranslationEntity,
     KindergartenEntity,
     SchoolEntity,
 } from './entities';
 import { CreateKindergartenDto, CreateSchoolDto } from './dto/request';
+import { LocaleEnum } from '../enums';
+import { kindergartenMapper, schoolMapper } from './institutions.helpers';
 
 @Injectable()
 export class InstitutionsService {
@@ -16,10 +18,10 @@ export class InstitutionsService {
         private readonly kindergartensRepository: Repository<KindergartenEntity>,
         @InjectRepository(SchoolEntity)
         private readonly schoolsRepository: Repository<SchoolEntity>,
-        @InjectRepository(InstitutionContactsEntity)
-        private readonly institutionsContactsRepository: Repository<InstitutionContactsEntity>,
-        @InjectRepository(InstitutionTranslationEntity)
-        private readonly institutionsTranslationsRepository: Repository<InstitutionTranslationEntity>,
+        @InjectRepository(ContactsEntity)
+        private readonly institutionsContactsRepository: Repository<ContactsEntity>,
+        @InjectRepository(TranslationEntity)
+        private readonly institutionsTranslationsRepository: Repository<TranslationEntity>,
     ) {}
     async createKindergarten(createKindergartenDto: CreateKindergartenDto) {
         const newKindergarten = this.kindergartensRepository.create({
@@ -35,22 +37,59 @@ export class InstitutionsService {
         return await this.kindergartensRepository.save(newKindergarten);
     }
 
-    getKindergartens() {
-        return this.kindergartensRepository.find({
-            relations: ['contacts', 'translations'],
-        });
+    async getKindergartens(locale: LocaleEnum) {
+        const kindergartens = await this.kindergartensRepository
+            .createQueryBuilder('kindergartens')
+            .leftJoinAndSelect(
+                'kindergartens.contacts',
+                'institutions_contacts',
+            )
+            .leftJoinAndSelect('kindergartens.subarea', 'institutions_subareas')
+            .leftJoinAndSelect(
+                'institutions_subareas.area',
+                'institutions_areas',
+            )
+            .leftJoinAndSelect('institutions_areas.city', 'institutions_cities')
+            .leftJoinAndSelect(
+                'kindergartens.translations',
+                'institutions_translations',
+                'institutions_translations.locale = :locale',
+                { locale },
+            )
+            .getMany();
+
+        return kindergartens.map((kindergarten) =>
+            kindergartenMapper(kindergarten),
+        );
     }
 
-    async getKindergartenById(id: number) {
-        const kindergarten = await this.kindergartensRepository.findOne({
-            where: { id },
-            relations: ['contacts', 'translations'],
-        });
+    async getKindergartenById(id: number, locale: LocaleEnum) {
+        const kindergarten = await this.kindergartensRepository
+            .createQueryBuilder('kindergartens')
+            .leftJoinAndSelect(
+                'kindergartens.contacts',
+                'institutions_contacts',
+            )
+            .leftJoinAndSelect('kindergartens.subarea', 'institutions_subareas')
+            .leftJoinAndSelect(
+                'institutions_subareas.area',
+                'institutions_areas',
+            )
+            .leftJoinAndSelect('institutions_areas.city', 'institutions_cities')
+
+            .leftJoinAndSelect(
+                'kindergartens.translations',
+                'institutions_translations',
+                'institutions_translations.locale = :locale',
+                { locale },
+            )
+            .where('kindergartens.id = :id', { id })
+            .getOne();
 
         if (!kindergarten)
             throw new NotFoundException('Kindergarten not found');
 
-        return kindergarten;
+        return kindergartenMapper(kindergarten);
     }
 
     async createSchool(createSchoolDto: CreateSchoolDto) {
@@ -67,20 +106,48 @@ export class InstitutionsService {
         return await this.schoolsRepository.save(school);
     }
 
-    getSchools() {
-        return this.schoolsRepository.find({
-            relations: ['contacts', 'translations'],
-        });
+    async getSchools(locale: LocaleEnum) {
+        const schools = await this.schoolsRepository
+            .createQueryBuilder('schools')
+            .leftJoinAndSelect('schools.contacts', 'institutions_contacts')
+            .leftJoinAndSelect(
+                'schools.translations',
+                'institutions_translations',
+                'institutions_translations.locale = :locale',
+                { locale },
+            )
+            .leftJoinAndSelect('schools.subarea', 'institutions_subareas')
+            .leftJoinAndSelect(
+                'institutions_subareas.area',
+                'institutions_areas',
+            )
+            .leftJoinAndSelect('institutions_areas.city', 'institutions_cities')
+            .getMany();
+
+        return schools.map((school) => schoolMapper(school));
     }
 
-    async getSchool(schoolId: number) {
-        const school = await this.schoolsRepository.findOne({
-            where: { id: schoolId },
-            relations: ['contacts', 'translations'],
-        });
+    async getSchool(schoolId: number, locale: LocaleEnum) {
+        const school = await this.schoolsRepository
+            .createQueryBuilder('schools')
+            .leftJoinAndSelect(
+                'schools.translations',
+                'institutions_translations',
+                'institutions_translations.locale = :locale',
+                { locale },
+            )
+            .leftJoinAndSelect('schools.contacts', 'institutions_contacts')
+            .leftJoinAndSelect('schools.subarea', 'institutions_subareas')
+            .leftJoinAndSelect(
+                'institutions_subareas.area',
+                'institutions_areas',
+            )
+            .leftJoinAndSelect('institutions_areas.city', 'institutions_cities')
+            .where('schools.id = :id', { id: schoolId })
+            .getOne();
 
         if (!school) throw new NotFoundException('School not found');
 
-        return school;
+        return schoolMapper(school);
     }
 }

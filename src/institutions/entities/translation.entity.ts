@@ -1,10 +1,18 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { LocaleEnum } from '../../enums/locale.enum';
+import {
+    Column,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    Unique,
+} from 'typeorm';
+import { LocaleEnum } from '../../enums';
 import { KindergartenEntity } from './kindergarten.entity';
 import { SchoolEntity } from './school.entity';
 
+@Unique(['school', 'locale'])
+@Unique(['kindergarten', 'locale'])
 @Entity({ name: 'institutions_translations' })
-export class InstitutionTranslationEntity {
+export class TranslationEntity {
     @PrimaryGeneratedColumn()
     id: string;
 

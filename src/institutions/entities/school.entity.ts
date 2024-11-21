@@ -1,25 +1,27 @@
 import {
     Entity,
     JoinColumn,
+    ManyToOne,
     OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import { InstitutionTranslationEntity } from './institutionTranslation.entity';
-import { InstitutionContactsEntity } from './institutionContacts.entity';
+import { TranslationEntity } from './translation.entity';
+import { ContactsEntity } from './contacts.entity';
+import { SubareaEntity } from './subarea.entity';
 
 @Entity('schools')
 export class SchoolEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToOne(() => InstitutionContactsEntity)
+    @OneToOne(() => ContactsEntity)
     @JoinColumn()
-    contacts: InstitutionContactsEntity;
+    contacts: ContactsEntity;
 
-    @OneToMany(
-        () => InstitutionTranslationEntity,
-        (translation) => translation.school,
-    )
-    translations: InstitutionTranslationEntity[];
+    @OneToMany(() => TranslationEntity, (translation) => translation.school)
+    translations: TranslationEntity[];
+
+    @ManyToOne(() => SubareaEntity, (subarea) => subarea.schools)
+    subarea: SubareaEntity;
 }

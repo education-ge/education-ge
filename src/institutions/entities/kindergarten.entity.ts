@@ -2,28 +2,30 @@ import {
     Column,
     Entity,
     JoinColumn,
+    ManyToOne,
     OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import { InstitutionContactsEntity } from './institutionContacts.entity';
-import { InstitutionTranslationEntity } from './institutionTranslation.entity';
+import { ContactsEntity } from './contacts.entity';
+import { TranslationEntity } from './translation.entity';
+import { SubareaEntity } from './subarea.entity';
 
 @Entity({ name: 'kindergartens' })
 export class KindergartenEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToOne(() => InstitutionContactsEntity)
+    @OneToOne(() => ContactsEntity)
     @JoinColumn()
-    contacts: InstitutionContactsEntity;
+    contacts: ContactsEntity;
 
     @OneToMany(
-        () => InstitutionTranslationEntity,
+        () => TranslationEntity,
         (translation) => translation.kindergarten,
     )
     @JoinColumn()
-    translations: InstitutionTranslationEntity[];
+    translations: TranslationEntity[];
 
     @Column({ type: 'int', array: true })
     ageGroups: number[];
@@ -39,4 +41,7 @@ export class KindergartenEntity {
 
     @Column({ type: 'boolean', nullable: true })
     sleepingPlaces?: boolean;
+
+    @ManyToOne(() => SubareaEntity, (subarea) => subarea.kindergartens)
+    subarea: SubareaEntity;
 }
