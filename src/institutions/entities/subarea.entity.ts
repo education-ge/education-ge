@@ -8,6 +8,7 @@ import {
 import { AreaEntity } from './area.entity';
 import { SchoolEntity } from './school.entity';
 import { KindergartenEntity } from './kindergarten.entity';
+import { PlaceTranslationEntity } from './placeTranslationEntity';
 
 @Entity('institutions_subareas')
 export class SubareaEntity {
@@ -25,4 +26,10 @@ export class SubareaEntity {
 
     @OneToMany(() => KindergartenEntity, (kindergarten) => kindergarten.subarea)
     kindergartens: KindergartenEntity[];
+
+    @OneToMany(
+        () => PlaceTranslationEntity,
+        (translation) => translation.subarea,
+    )
+    translations: PlaceTranslationEntity[];
 }

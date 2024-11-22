@@ -5,3 +5,4 @@ export * from './school.entity';
 export * from './city.entity';
 export * from './area.entity';
 export * from './subarea.entity';
+export * from './language.entity';

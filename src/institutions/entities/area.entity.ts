@@ -7,6 +7,8 @@ import {
 } from 'typeorm';
 import { CityEntity } from './city.entity';
 import { SubareaEntity } from './subarea.entity';
+import { TranslationEntity } from './translation.entity';
+import { PlaceTranslationEntity } from './placeTranslationEntity';
 
 @Entity('institutions_areas')
 export class AreaEntity {
@@ -21,4 +23,7 @@ export class AreaEntity {
 
     @OneToMany(() => SubareaEntity, (subarea) => subarea.area)
     subareas: SubareaEntity[];
+
+    @OneToMany(() => PlaceTranslationEntity, (translation) => translation.area)
+    translations: TranslationEntity[];
 }

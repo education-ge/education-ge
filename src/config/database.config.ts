@@ -8,7 +8,9 @@ import {
     CityEntity,
     AreaEntity,
     SubareaEntity,
+    LanguageEntity,
 } from '../institutions/entities';
+import { PlaceTranslationEntity } from '../institutions/entities/placeTranslationEntity';
 
 export function databaseConfig(): TypeOrmModuleAsyncOptions {
     return {
@@ -29,6 +31,8 @@ export function databaseConfig(): TypeOrmModuleAsyncOptions {
                 CityEntity,
                 AreaEntity,
                 SubareaEntity,
+                LanguageEntity,
+                PlaceTranslationEntity,
             ],
             synchronize: true,
             ssl: configService.getOrThrow('NODE_ENV') === 'production',

@@ -2,6 +2,7 @@ import {
     Column,
     Entity,
     JoinColumn,
+    ManyToMany,
     ManyToOne,
     OneToMany,
     OneToOne,
@@ -10,6 +11,7 @@ import {
 import { ContactsEntity } from './contacts.entity';
 import { TranslationEntity } from './translation.entity';
 import { SubareaEntity } from './subarea.entity';
+import { LanguageEntity } from './language.entity';
 
 @Entity({ name: 'kindergartens' })
 export class KindergartenEntity {
@@ -26,6 +28,9 @@ export class KindergartenEntity {
     )
     @JoinColumn()
     translations: TranslationEntity[];
+
+    @ManyToMany(() => LanguageEntity, (language) => language.kindergartens)
+    languages: LanguageEntity[];
 
     @Column({ type: 'int', array: true })
     ageGroups: number[];

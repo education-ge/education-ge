@@ -82,4 +82,17 @@ export class InstitutionsController {
     ) {
         return this.institutionsService.getSchool(schoolId, locale);
     }
+
+    @ApiParam({ name: 'locale', enum: LocaleEnum })
+    @Get('cities')
+    getCities(
+        @Param('locale', new ParseEnumPipe(LocaleEnum)) locale: LocaleEnum,
+    ) {
+        return this.institutionsService.getCities(locale);
+    }
+
+    @Get('languages')
+    getLanguages() {
+        return this.institutionsService.getLanguages();
+    }
 }

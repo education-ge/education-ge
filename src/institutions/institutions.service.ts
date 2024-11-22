@@ -6,10 +6,16 @@ import {
     TranslationEntity,
     KindergartenEntity,
     SchoolEntity,
+    CityEntity,
+    LanguageEntity,
 } from './entities';
 import { CreateKindergartenDto, CreateSchoolDto } from './dto/request';
 import { LocaleEnum } from '../enums';
-import { kindergartenMapper, schoolMapper } from './institutions.helpers';
+import {
+    cityMapper,
+    kindergartenMapper,
+    schoolMapper,
+} from './institutions.helpers';
 
 @Injectable()
 export class InstitutionsService {
@@ -22,6 +28,10 @@ export class InstitutionsService {
         private readonly institutionsContactsRepository: Repository<ContactsEntity>,
         @InjectRepository(TranslationEntity)
         private readonly institutionsTranslationsRepository: Repository<TranslationEntity>,
+        @InjectRepository(CityEntity)
+        private readonly citiesRepository: Repository<CityEntity>,
+        @InjectRepository(LanguageEntity)
+        private readonly languagesRepository: Repository<LanguageEntity>,
     ) {}
     async createKindergarten(createKindergartenDto: CreateKindergartenDto) {
         const newKindergarten = this.kindergartensRepository.create({
@@ -139,15 +149,71 @@ export class InstitutionsService {
             .leftJoinAndSelect('schools.contacts', 'institutions_contacts')
             .leftJoinAndSelect('schools.subarea', 'institutions_subareas')
             .leftJoinAndSelect(
+                'institutions_subareas.translations',
+                'st',
+                'st.locale = :placeLocale',
+                { placeLocale: locale },
+            )
+            .leftJoinAndSelect(
                 'institutions_subareas.area',
                 'institutions_areas',
             )
+            .leftJoinAndSelect(
+                'institutions_areas.translations',
+                'at',
+                'at.locale = :placeLocale',
+                { placeLocale: locale },
+            )
             .leftJoinAndSelect('institutions_areas.city', 'institutions_cities')
+            .leftJoinAndSelect(
+                'institutions_cities.translations',
+                'ct',
+                'ct.locale = :placeLocale',
+                { placeLocale: locale },
+            )
             .where('schools.id = :id', { id: schoolId })
             .getOne();
 
         if (!school) throw new NotFoundException('School not found');
 
         return schoolMapper(school);
+    }
+
+    async getCities(locale: LocaleEnum) {
+        const cities = await this.citiesRepository
+            .createQueryBuilder('institutions_cities')
+            .leftJoinAndSelect(
+                'institutions_cities.areas',
+                'institutions_areas',
+            )
+            .leftJoinAndSelect(
+                'institutions_areas.translations',
+                'areas_translations',
+                'areas_translations.locale = :locale',
+                { locale },
+            )
+            .leftJoinAndSelect(
+                'institutions_areas.subareas',
+                'institutions_subareas',
+            )
+            .leftJoinAndSelect(
+                'institutions_subareas.translations',
+                'subareas_translations',
+                'subareas_translations.locale = :locale',
+                { locale },
+            )
+            .leftJoinAndSelect(
+                'institutions_cities.translations',
+                'cities_translations',
+                'cities_translations.locale = :locale',
+                { locale },
+            )
+            .getMany();
+
+        return cities.map((city) => cityMapper(city));
+    }
+
+    getLanguages() {
+        return this.languagesRepository.find();
     }
 }
