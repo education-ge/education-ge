@@ -6,8 +6,8 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AreaEntity } from './area.entity';
-import { SchoolEntity } from './school.entity';
-import { KindergartenEntity } from './kindergarten.entity';
+import { SchoolEntity } from '../../institutions/entities';
+import { KindergartenEntity } from '../../institutions/entities';
 import { PlaceTranslationEntity } from './placeTranslationEntity';
 
 @Entity('institutions_subareas')

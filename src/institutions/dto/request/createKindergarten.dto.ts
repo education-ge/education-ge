@@ -4,7 +4,6 @@ import {
     IsDefined,
     IsInt,
     IsNumber,
-    IsOptional,
     IsString,
     Min,
     ValidateNested,
@@ -13,6 +12,7 @@ import { CreateInstitutionContactsDto } from './createInstitutionContacts.dto';
 import { Type } from 'class-transformer';
 import { CreateInstitutionTranslationDto } from './createInstitutionTranslation.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNullable } from '../../../decorators';
 
 export class CreateKindergartenDto {
     @ApiProperty({ type: CreateInstitutionContactsDto })
@@ -21,12 +21,17 @@ export class CreateKindergartenDto {
     @Type(() => CreateInstitutionContactsDto)
     contacts: CreateInstitutionContactsDto;
 
-    @ApiProperty({ type: CreateInstitutionTranslationDto })
+    @ApiProperty({ type: CreateInstitutionTranslationDto, isArray: true })
     @IsDefined()
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => CreateInstitutionTranslationDto)
     translations: CreateInstitutionTranslationDto[];
+
+    @ApiProperty({ type: 'integer', isArray: true })
+    @IsInt({ each: true })
+    @Min(1, { each: true })
+    languagesIds: number[];
 
     @ApiProperty({ type: 'integer', isArray: true })
     @IsNumber({}, { each: true })
@@ -35,8 +40,8 @@ export class CreateKindergartenDto {
     @ApiProperty({ required: false })
     @IsInt()
     @Min(0)
-    @IsOptional()
-    teachersCount?: number;
+    @IsNullable()
+    teachersCount: number | null;
 
     @ApiProperty()
     @IsInt()
@@ -46,8 +51,13 @@ export class CreateKindergartenDto {
     @IsString({ each: true })
     mealPlan: string[];
 
-    @ApiProperty({ required: false })
+    @ApiProperty({ nullable: true })
     @IsBoolean()
-    @IsOptional()
-    sleepingPlaces?: boolean;
+    @IsNullable()
+    sleepingPlaces: boolean | null;
+
+    @ApiProperty()
+    @IsInt()
+    @Min(1)
+    subareaId: number;
 }

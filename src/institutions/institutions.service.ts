@@ -6,13 +6,11 @@ import {
     TranslationEntity,
     KindergartenEntity,
     SchoolEntity,
-    CityEntity,
-    LanguageEntity,
 } from './entities';
 import { CreateKindergartenDto, CreateSchoolDto } from './dto/request';
 import { LocaleEnum } from '../enums';
 import {
-    cityMapper,
+    kindergartenListItemMapper,
     kindergartenMapper,
     schoolMapper,
 } from './institutions.helpers';
@@ -28,10 +26,10 @@ export class InstitutionsService {
         private readonly institutionsContactsRepository: Repository<ContactsEntity>,
         @InjectRepository(TranslationEntity)
         private readonly institutionsTranslationsRepository: Repository<TranslationEntity>,
-        @InjectRepository(CityEntity)
-        private readonly citiesRepository: Repository<CityEntity>,
-        @InjectRepository(LanguageEntity)
-        private readonly languagesRepository: Repository<LanguageEntity>,
+        // @InjectRepository(CityEntity)
+        // private readonly citiesRepository: Repository<CityEntity>,
+        // @InjectRepository(LanguageEntity)
+        // private readonly languagesRepository: Repository<LanguageEntity>,
     ) {}
     async createKindergarten(createKindergartenDto: CreateKindergartenDto) {
         const newKindergarten = this.kindergartensRepository.create({
@@ -42,6 +40,10 @@ export class InstitutionsService {
             translations: await this.institutionsTranslationsRepository.save(
                 createKindergartenDto.translations,
             ),
+            subarea: { id: createKindergartenDto.subareaId },
+            languages: createKindergartenDto.languagesIds.map((languageId) => ({
+                id: languageId,
+            })),
         });
 
         return await this.kindergartensRepository.save(newKindergarten);
@@ -66,10 +68,11 @@ export class InstitutionsService {
                 'institutions_translations.locale = :locale',
                 { locale },
             )
+            .leftJoinAndSelect('kindergartens.languages', 'il')
             .getMany();
 
         return kindergartens.map((kindergarten) =>
-            kindergartenMapper(kindergarten),
+            kindergartenListItemMapper(kindergarten),
         );
     }
 
@@ -179,41 +182,41 @@ export class InstitutionsService {
         return schoolMapper(school);
     }
 
-    async getCities(locale: LocaleEnum) {
-        const cities = await this.citiesRepository
-            .createQueryBuilder('institutions_cities')
-            .leftJoinAndSelect(
-                'institutions_cities.areas',
-                'institutions_areas',
-            )
-            .leftJoinAndSelect(
-                'institutions_areas.translations',
-                'areas_translations',
-                'areas_translations.locale = :locale',
-                { locale },
-            )
-            .leftJoinAndSelect(
-                'institutions_areas.subareas',
-                'institutions_subareas',
-            )
-            .leftJoinAndSelect(
-                'institutions_subareas.translations',
-                'subareas_translations',
-                'subareas_translations.locale = :locale',
-                { locale },
-            )
-            .leftJoinAndSelect(
-                'institutions_cities.translations',
-                'cities_translations',
-                'cities_translations.locale = :locale',
-                { locale },
-            )
-            .getMany();
+    // async getCities(locale: LocaleEnum) {
+    //     const cities = await this.citiesRepository
+    //         .createQueryBuilder('institutions_cities')
+    //         .leftJoinAndSelect(
+    //             'institutions_cities.areas',
+    //             'institutions_areas',
+    //         )
+    //         .leftJoinAndSelect(
+    //             'institutions_areas.translations',
+    //             'areas_translations',
+    //             'areas_translations.locale = :locale',
+    //             { locale },
+    //         )
+    //         .leftJoinAndSelect(
+    //             'institutions_areas.subareas',
+    //             'institutions_subareas',
+    //         )
+    //         .leftJoinAndSelect(
+    //             'institutions_subareas.translations',
+    //             'subareas_translations',
+    //             'subareas_translations.locale = :locale',
+    //             { locale },
+    //         )
+    //         .leftJoinAndSelect(
+    //             'institutions_cities.translations',
+    //             'cities_translations',
+    //             'cities_translations.locale = :locale',
+    //             { locale },
+    //         )
+    //         .getMany();
+    //
+    //     return cities.map((city) => cityMapper(city));
+    // }
 
-        return cities.map((city) => cityMapper(city));
-    }
-
-    getLanguages() {
-        return this.languagesRepository.find();
-    }
+    // getLanguages() {
+    //     return this.languagesRepository.find();
+    // }
 }

@@ -13,7 +13,11 @@ import { InstitutionsService } from './institutions.service';
 import { CreateKindergartenDto, CreateSchoolDto } from './dto/request';
 import { LocaleEnum } from '../enums';
 import { ApiOkResponse, ApiParam } from '@nestjs/swagger';
-import { KindergartenDto, SchoolDto } from './dto/response';
+import {
+    KindergartenDto,
+    KindergartenListItemDto,
+    SchoolDto,
+} from './dto/response';
 
 @Controller('institutions')
 export class InstitutionsController {
@@ -31,7 +35,7 @@ export class InstitutionsController {
     }
 
     @ApiParam({ name: 'locale', enum: LocaleEnum })
-    @ApiOkResponse({ type: KindergartenDto, isArray: true })
+    @ApiOkResponse({ type: KindergartenListItemDto, isArray: true })
     @Get('kindergartens')
     getKindergartens(
         @Param('locale', new ParseEnumPipe(LocaleEnum)) locale: LocaleEnum,
@@ -83,16 +87,8 @@ export class InstitutionsController {
         return this.institutionsService.getSchool(schoolId, locale);
     }
 
-    @ApiParam({ name: 'locale', enum: LocaleEnum })
-    @Get('cities')
-    getCities(
-        @Param('locale', new ParseEnumPipe(LocaleEnum)) locale: LocaleEnum,
-    ) {
-        return this.institutionsService.getCities(locale);
-    }
-
-    @Get('languages')
-    getLanguages() {
-        return this.institutionsService.getLanguages();
-    }
+    // @Get('languages')
+    // getLanguages() {
+    //     return this.institutionsService.getLanguages();
+    // }
 }

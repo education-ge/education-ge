@@ -1,6 +1,7 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { LocaleEnum } from '../../../enums/locale.enum';
+import { LocaleEnum } from '../../../enums';
+import { IsNullable } from '../../../decorators';
 
 export class CreateInstitutionTranslationDto {
     @ApiProperty()
@@ -11,15 +12,15 @@ export class CreateInstitutionTranslationDto {
     @IsString()
     address: string;
 
-    @ApiProperty({ required: false })
+    @ApiProperty({ nullable: true })
     @IsString()
-    @IsOptional()
-    shortDescription?: string;
+    @IsNullable()
+    shortDescription: string | null;
 
-    @ApiProperty({ required: false })
+    @ApiProperty({ nullable: true })
     @IsString()
-    @IsOptional()
-    description?: string;
+    @IsNullable()
+    description: string | null;
 
     @ApiProperty({ enum: LocaleEnum })
     @IsEnum(LocaleEnum)

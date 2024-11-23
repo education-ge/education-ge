@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { CityEntity } from './city.entity';
 import { SubareaEntity } from './subarea.entity';
-import { TranslationEntity } from './translation.entity';
+import { TranslationEntity } from '../../institutions/entities';
 import { PlaceTranslationEntity } from './placeTranslationEntity';
 
 @Entity('institutions_areas')

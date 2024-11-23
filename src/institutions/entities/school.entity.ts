@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 import { TranslationEntity } from './translation.entity';
 import { ContactsEntity } from './contacts.entity';
-import { SubareaEntity } from './subarea.entity';
-import { LanguageEntity } from './language.entity';
+import { SubareaEntity } from '../../cities/entities';
+import { LanguageEntity } from '../../languages/entities';
 
 @Entity('schools')
 export class SchoolEntity {

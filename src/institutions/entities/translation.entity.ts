@@ -14,7 +14,7 @@ import { SchoolEntity } from './school.entity';
 @Entity({ name: 'institutions_translations' })
 export class TranslationEntity {
     @PrimaryGeneratedColumn()
-    id: string;
+    id: number;
 
     @Column()
     name: string;
@@ -23,10 +23,10 @@ export class TranslationEntity {
     address: string;
 
     @Column({ nullable: true })
-    shortDescription?: string;
+    shortDescription: string | null;
 
     @Column({ nullable: true })
-    description?: string;
+    description: string | null;
 
     @Column({ type: 'enum', enum: LocaleEnum })
     locale: LocaleEnum;

@@ -10,8 +10,8 @@ import {
 } from 'typeorm';
 import { ContactsEntity } from './contacts.entity';
 import { TranslationEntity } from './translation.entity';
-import { SubareaEntity } from './subarea.entity';
-import { LanguageEntity } from './language.entity';
+import { SubareaEntity } from '../../cities/entities';
+import { LanguageEntity } from '../../languages/entities';
 
 @Entity({ name: 'kindergartens' })
 export class KindergartenEntity {
@@ -36,7 +36,7 @@ export class KindergartenEntity {
     ageGroups: number[];
 
     @Column({ type: 'int', nullable: true })
-    teachersCount?: number;
+    teachersCount: number | null;
 
     @Column({ type: 'int', nullable: true })
     groups: number;
@@ -45,7 +45,7 @@ export class KindergartenEntity {
     mealPlan: string[];
 
     @Column({ type: 'boolean', nullable: true })
-    sleepingPlaces?: boolean;
+    sleepingPlaces: boolean | null;
 
     @ManyToOne(() => SubareaEntity, (subarea) => subarea.kindergartens)
     subarea: SubareaEntity;

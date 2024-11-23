@@ -5,12 +5,13 @@ import {
     TranslationEntity,
     KindergartenEntity,
     SchoolEntity,
-    CityEntity,
-    AreaEntity,
-    SubareaEntity,
-    LanguageEntity,
 } from '../institutions/entities';
-import { PlaceTranslationEntity } from '../institutions/entities/placeTranslationEntity';
+import { PlaceTranslationEntity } from '../cities/entities';
+import { AreaEntity, CityEntity, SubareaEntity } from '../cities/entities';
+import {
+    LanguageEntity,
+    LanguageTranslationEntity,
+} from '../languages/entities';
 
 export function databaseConfig(): TypeOrmModuleAsyncOptions {
     return {
@@ -33,6 +34,7 @@ export function databaseConfig(): TypeOrmModuleAsyncOptions {
                 SubareaEntity,
                 LanguageEntity,
                 PlaceTranslationEntity,
+                LanguageTranslationEntity,
             ],
             synchronize: true,
             ssl: configService.getOrThrow('NODE_ENV') === 'production',

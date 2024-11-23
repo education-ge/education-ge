@@ -7,8 +7,6 @@ import {
     TranslationEntity,
     KindergartenEntity,
     SchoolEntity,
-    CityEntity,
-    LanguageEntity,
 } from './entities';
 
 @Module({
@@ -20,8 +18,6 @@ import {
             SchoolEntity,
             ContactsEntity,
             TranslationEntity,
-            CityEntity,
-            LanguageEntity,
         ]),
     ],
 })

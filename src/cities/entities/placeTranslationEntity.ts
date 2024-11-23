@@ -1,8 +1,8 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { LocaleEnum } from '../../enums';
-import { CityEntity } from './city.entity';
-import { AreaEntity } from './area.entity';
-import { SubareaEntity } from './subarea.entity';
+import { CityEntity } from './index';
+import { AreaEntity } from './index';
+import { SubareaEntity } from './index';
 import { Unique } from 'typeorm';
 
 @Unique(['city', 'locale'])

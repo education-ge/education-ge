@@ -1,25 +1,34 @@
-import {
-    ContactsEntity,
-    SubareaEntity,
-    TranslationEntity,
-} from '../../entities';
 import { ApiProperty } from '@nestjs/swagger';
+import { ContactsDto } from './contacts.dto';
+import { SubareaEntity } from '../../../cities/entities';
 
 export class KindergartenDto {
     @ApiProperty()
     id: number;
 
-    @ApiProperty()
-    contacts: ContactsEntity;
+    @ApiProperty({ type: ContactsDto })
+    contacts: ContactsDto;
 
     @ApiProperty()
-    translation: TranslationEntity;
+    name: string;
+
+    @ApiProperty()
+    address: string;
+
+    @ApiProperty({ type: 'string', nullable: true })
+    shortDescription: string | null;
+
+    @ApiProperty({ type: 'string', nullable: true })
+    description: string | null;
+
+    @ApiProperty({ type: 'string', nullable: true })
+    thumbnail: string | null;
 
     @ApiProperty({ type: 'integer', isArray: true })
     ageGroups: number[];
 
-    @ApiProperty({ required: false })
-    teachersCount?: number;
+    @ApiProperty()
+    teachersCount: number | null;
 
     @ApiProperty()
     groups: number;
@@ -27,8 +36,8 @@ export class KindergartenDto {
     @ApiProperty({ type: 'string', isArray: true })
     mealPlan: string[];
 
-    @ApiProperty({ required: false })
-    sleepingPlaces?: boolean;
+    @ApiProperty()
+    sleepingPlaces: boolean | null;
 
     @ApiProperty()
     subarea: SubareaEntity;

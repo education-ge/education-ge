@@ -6,23 +6,23 @@ export class ContactsEntity {
     id: number;
 
     @Column({ nullable: true })
-    facebook?: string;
+    thumbnail: string | null;
 
     @Column({ nullable: true })
-    instagram?: string;
+    facebook: string | null;
 
     @Column({ nullable: true })
-    twitter?: string;
+    instagram: string | null;
 
     @Column({ nullable: true })
-    youtube?: string;
+    youtube: string | null;
 
     @Column({ nullable: true })
-    telegram?: string;
+    telegram: string | null;
 
     @Column({ nullable: true })
-    whatsapp?: string;
+    whatsapp: string | null;
 
     @Column({ nullable: true })
-    viber?: string;
+    viber: string | null;
 }

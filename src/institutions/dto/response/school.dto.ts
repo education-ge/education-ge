@@ -1,9 +1,6 @@
-import {
-    ContactsEntity,
-    SubareaEntity,
-    TranslationEntity,
-} from '../../entities';
+import { ContactsEntity } from '../../entities';
 import { ApiProperty } from '@nestjs/swagger';
+import { SubareaEntity } from '../../../cities/entities';
 
 export class SchoolDto {
     @ApiProperty()
@@ -12,8 +9,17 @@ export class SchoolDto {
     @ApiProperty({ type: ContactsEntity })
     contacts: ContactsEntity;
 
-    @ApiProperty({ type: TranslationEntity })
-    translation: TranslationEntity;
+    @ApiProperty()
+    name: string;
+
+    @ApiProperty()
+    address: string;
+
+    @ApiProperty({ type: 'string', nullable: true })
+    shortDescription: string | null;
+
+    @ApiProperty({ type: 'string', nullable: true })
+    description: string | null;
 
     @ApiProperty({ type: SubareaEntity })
     subarea: SubareaEntity;
