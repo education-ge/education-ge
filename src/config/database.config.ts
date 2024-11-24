@@ -36,7 +36,7 @@ export function databaseConfig(): TypeOrmModuleAsyncOptions {
                 PlaceTranslationEntity,
                 LanguageTranslationEntity,
             ],
-            synchronize: true,
+            synchronize: false,
             ssl: configService.getOrThrow('NODE_ENV') === 'production',
         }),
     };

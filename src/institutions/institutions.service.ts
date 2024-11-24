@@ -69,6 +69,12 @@ export class InstitutionsService {
                 { locale },
             )
             .leftJoinAndSelect('kindergartens.languages', 'il')
+            .leftJoinAndSelect(
+                'il.translations',
+                'lt',
+                'lt.locale = :langLocale',
+                { langLocale: locale },
+            )
             .getMany();
 
         return kindergartens.map((kindergarten) =>

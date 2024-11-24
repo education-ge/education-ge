@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { LanguageEntity } from '../../../languages/entities';
+import { LanguageDto } from '../../../languages/dto/response';
 
 export class KindergartenListItemDto {
     @ApiProperty()
@@ -18,7 +18,7 @@ export class KindergartenListItemDto {
     thumbnail: string | null;
 
     @ApiProperty()
-    languages: LanguageEntity[];
+    languages: LanguageDto[];
 
     @ApiProperty({ type: 'integer', isArray: true })
     ageGroups: number[];

@@ -16,9 +16,9 @@ export class CitiesService {
 
     async getCities(locale: LocaleEnum) {
         const cities = await this.citiesRepository
-            .createQueryBuilder('institutions_cities')
+            .createQueryBuilder('cities')
             .leftJoinAndSelect(
-                'institutions_cities.translations',
+                'cities.translations',
                 'ct',
                 'ct.locale = :locale',
                 { locale },
@@ -29,16 +29,16 @@ export class CitiesService {
 
     async getAreas(locale: LocaleEnum, cityId: number) {
         const areas = await this.areasRepository
-            .createQueryBuilder('institutions_areas')
+            .createQueryBuilder('areas')
             .leftJoinAndSelect(
-                'institutions_areas.translations',
+                'areas.translations',
                 'at',
                 'at.locale = :locale',
                 { locale },
             )
-            .leftJoinAndSelect('institutions_areas.subareas', 'is')
+            .leftJoinAndSelect('areas.subareas', 'is')
             .leftJoinAndSelect('is.translations', 'st', 'st.locale = :locale')
-            .leftJoin('institutions_areas.city', 'city')
+            .leftJoin('areas.city', 'city')
             .where('city.id = :cityId', { cityId })
             .getMany();
         return areas.map((area) => areaMapper(area));

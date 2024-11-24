@@ -8,9 +8,9 @@ import {
 import { AreaEntity } from './area.entity';
 import { SchoolEntity } from '../../institutions/entities';
 import { KindergartenEntity } from '../../institutions/entities';
-import { PlaceTranslationEntity } from './placeTranslationEntity';
+import { PlaceTranslationEntity } from './placeTranslation.entity';
 
-@Entity('institutions_subareas')
+@Entity('subareas')
 export class SubareaEntity {
     @PrimaryGeneratedColumn()
     id: number;

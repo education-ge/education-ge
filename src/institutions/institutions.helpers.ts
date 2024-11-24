@@ -1,6 +1,7 @@
 import { KindergartenListItemDto, SchoolDto } from './dto/response';
 import { KindergartenEntity, SchoolEntity } from './entities';
 import { KindergartenDto } from './dto/response';
+import { languageMapper } from '../languages/languages.helpers';
 
 export function schoolMapper(schoolEntity: SchoolEntity): SchoolDto {
     return {
@@ -43,7 +44,9 @@ export function kindergartenListItemMapper(
         address: kindergartenEntity.translations[0]?.address,
         description: kindergartenEntity.translations[0]?.description,
         thumbnail: null,
-        languages: kindergartenEntity.languages,
+        languages: kindergartenEntity.languages.map((language) =>
+            languageMapper(language),
+        ),
         ageGroups: kindergartenEntity.ageGroups,
     };
 }

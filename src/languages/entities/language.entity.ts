@@ -11,7 +11,7 @@ import { KindergartenEntity } from '../../institutions/entities';
 import { JoinTable } from 'typeorm';
 import { LanguageTranslationEntity } from './languageTranslation.entity';
 
-@Entity('institutions_language')
+@Entity('languages')
 export class LanguageEntity {
     @PrimaryGeneratedColumn()
     id: number;

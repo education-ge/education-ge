@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LanguageEntity } from './entities';
 import { LocaleEnum } from '../enums';
-import { languageMapper } from './tests/languages.helpers';
+import { languageMapper } from './languages.helpers';
 
 @Injectable()
 export class LanguagesService {
@@ -14,9 +14,9 @@ export class LanguagesService {
 
     async getLanguages(locale: LocaleEnum) {
         const languages = await this.languagesRepository
-            .createQueryBuilder('institutions_language')
+            .createQueryBuilder('languages')
             .leftJoinAndSelect(
-                'institutions_language.translations',
+                'languages.translations',
                 'lt',
                 'lt.locale = :locale',
                 { locale },
