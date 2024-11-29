@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { version } from 'package.json';
 import { LocaleEnum } from './enums';
+import { RequestMethod } from '@nestjs/common';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -23,7 +24,14 @@ async function bootstrap() {
     SwaggerModule.setup('docs', app, documentFactory);
 
     app.enableCors();
-    app.setGlobalPrefix(':locale', { exclude: ['health'] });
+    app.setGlobalPrefix(':locale', {
+        exclude: [
+            { path: 'health', method: RequestMethod.GET },
+            { path: 'institutions/kindergartens', method: RequestMethod.POST },
+            { path: 'institutions/schools', method: RequestMethod.POST },
+            { path: 'languages', method: RequestMethod.POST },
+        ],
+    });
     await app.listen(configService.get('PORT') || 3000);
 }
 bootstrap();

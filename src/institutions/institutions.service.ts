@@ -49,8 +49,14 @@ export class InstitutionsService {
         return await this.kindergartensRepository.save(newKindergarten);
     }
 
-    async getKindergartens(locale: LocaleEnum) {
-        const kindergartens = await this.kindergartensRepository
+    async getKindergartens(
+        locale: LocaleEnum,
+        pagination: number = 10,
+        page: number = 1,
+        areasIds?: number[],
+        languagesIds?: number[],
+    ) {
+        const queryBuilder = this.kindergartensRepository
             .createQueryBuilder('kindergartens')
             .leftJoinAndSelect(
                 'kindergartens.contacts',
@@ -74,8 +80,31 @@ export class InstitutionsService {
                 'lt',
                 'lt.locale = :langLocale',
                 { langLocale: locale },
-            )
+            );
+
+        if (areasIds && areasIds.length > 0) {
+            queryBuilder.andWhere('institutions_areas.id IN (:...areasIds)', {
+                areasIds,
+            });
+        }
+
+        if (languagesIds && languagesIds.length) {
+            queryBuilder.andWhere(
+                `EXISTS (
+                    SELECT 1 FROM languages_kindergartens_kindergartens lk 
+                    WHERE lk.kindergartens_id = kindergartens.id 
+                    AND lk.languages_id IN (:...languagesIds)
+                )`,
+                { languagesIds },
+            );
+        }
+
+        const kindergartens = await queryBuilder
+            .offset((page - 1) * pagination)
+            .take(10)
             .getMany();
+
+        console.log(kindergartens);
 
         return kindergartens.map((kindergarten) =>
             kindergartenListItemMapper(kindergarten),
@@ -125,8 +154,13 @@ export class InstitutionsService {
         return await this.schoolsRepository.save(school);
     }
 
-    async getSchools(locale: LocaleEnum) {
-        const schools = await this.schoolsRepository
+    async getSchools(
+        locale: LocaleEnum,
+        pagination: number = 10,
+        page: number = 1,
+        areasIds?: number[],
+    ) {
+        const queryBuilder = this.schoolsRepository
             .createQueryBuilder('schools')
             .leftJoinAndSelect('schools.contacts', 'institutions_contacts')
             .leftJoinAndSelect(
@@ -140,7 +174,20 @@ export class InstitutionsService {
                 'institutions_subareas.area',
                 'institutions_areas',
             )
-            .leftJoinAndSelect('institutions_areas.city', 'institutions_cities')
+            .leftJoinAndSelect(
+                'institutions_areas.city',
+                'institutions_cities',
+            );
+
+        if (areasIds && areasIds.length) {
+            queryBuilder.andWhere('institutions_areas.id IN (:...areasIds)', {
+                areasIds,
+            });
+        }
+
+        const schools = await queryBuilder
+            .offset((page - 1) * pagination)
+            .take(pagination)
             .getMany();
 
         return schools.map((school) => schoolMapper(school));

@@ -29,7 +29,17 @@ export class LanguageEntity {
         () => KindergartenEntity,
         (kindergarten) => kindergarten.languages,
     )
-    @JoinTable()
+    @JoinTable({
+        name: 'languages_kindergartens_kindergartens',
+        joinColumn: {
+            name: 'languages_id',
+            referencedColumnName: 'id',
+        },
+        inverseJoinColumn: {
+            name: 'kindergartens_id',
+            referencedColumnName: 'id',
+        },
+    })
     kindergartens: KindergartenEntity[];
 
     @OneToMany(

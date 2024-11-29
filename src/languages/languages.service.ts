@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { LanguageEntity } from './entities';
 import { LocaleEnum } from '../enums';
 import { languageMapper } from './languages.helpers';
+import { CreateLanguageDto } from './dto/request';
 
 @Injectable()
 export class LanguagesService {
@@ -24,5 +25,11 @@ export class LanguagesService {
             .getMany();
 
         return languages.map((language) => languageMapper(language));
+    }
+
+    createLanguage(createLanguageDto: CreateLanguageDto) {
+        const language = this.languagesRepository.create(createLanguageDto);
+
+        return this.languagesRepository.save(language);
     }
 }

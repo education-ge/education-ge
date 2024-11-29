@@ -3,16 +3,18 @@ import {
     Controller,
     Get,
     Param,
+    ParseArrayPipe,
     ParseEnumPipe,
     ParseIntPipe,
     Post,
+    Query,
     UsePipes,
     ValidationPipe,
 } from '@nestjs/common';
 import { InstitutionsService } from './institutions.service';
 import { CreateKindergartenDto, CreateSchoolDto } from './dto/request';
 import { LocaleEnum } from '../enums';
-import { ApiOkResponse, ApiParam } from '@nestjs/swagger';
+import { ApiOkResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import {
     KindergartenDto,
     KindergartenListItemDto,
@@ -34,13 +36,28 @@ export class InstitutionsController {
         );
     }
 
+    @ApiQuery({ name: 'area', type: 'string', required: false })
+    @ApiQuery({ name: 'lang', type: 'string', required: false })
+    @ApiQuery({ name: 'pagination', type: 'number', required: false })
+    @ApiQuery({ name: 'page', type: 'number', required: false })
     @ApiParam({ name: 'locale', enum: LocaleEnum })
     @ApiOkResponse({ type: KindergartenListItemDto, isArray: true })
     @Get('kindergartens')
     getKindergartens(
         @Param('locale', new ParseEnumPipe(LocaleEnum)) locale: LocaleEnum,
+        @Query('area', new ParseArrayPipe({ optional: true })) area?: number[],
+        @Query('lang', new ParseArrayPipe({ optional: true })) lang?: number[],
+        @Query('pagination', new ParseIntPipe({ optional: true }))
+        pagination?: number,
+        @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     ) {
-        return this.institutionsService.getKindergartens(locale);
+        return this.institutionsService.getKindergartens(
+            locale,
+            pagination,
+            page,
+            area,
+            lang,
+        );
     }
 
     @ApiParam({ name: 'locale', enum: LocaleEnum })
@@ -68,13 +85,26 @@ export class InstitutionsController {
         return this.institutionsService.createSchool(createSchoolDto);
     }
 
+    @ApiQuery({ name: 'area', type: 'string', required: false })
+    @ApiQuery({ name: 'lang', type: 'string', required: false })
+    @ApiQuery({ name: 'pagination', type: 'number', required: false })
+    @ApiQuery({ name: 'page', type: 'number', required: false })
     @ApiParam({ name: 'locale', enum: LocaleEnum })
     @ApiOkResponse({ type: SchoolDto, isArray: true })
     @Get('schools')
     getSchools(
         @Param('locale', new ParseEnumPipe(LocaleEnum)) locale: LocaleEnum,
+        @Query('pagination', new ParseIntPipe({ optional: true }))
+        pagination: number,
+        @Query('page', new ParseIntPipe({ optional: true })) page: number,
+        @Query('area', new ParseArrayPipe({ optional: true })) area?: number[],
     ) {
-        return this.institutionsService.getSchools(locale);
+        return this.institutionsService.getSchools(
+            locale,
+            pagination,
+            page,
+            area,
+        );
     }
 
     @ApiParam({ name: 'locale', enum: LocaleEnum })
